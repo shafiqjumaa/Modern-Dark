@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عصب الحرب: الشرق الأوسط</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="setup-screen" class="panel">
+            <h2>إعداد اللعبة الاستراتيجية</h2>
+            <div class="form-group">
+                <label for="player-name">اسم القائد:</label>
+                <input type="text" id="player-name" placeholder="أدخل اسمك الحركي">
+            </div>
+            <div class="form-group">
+                <label for="country-select">اختر الدولة الحليفة:</label>
+                <select id="country-select"></select>
+            </div>
+            <button id="add-player-btn" class="btn-primary">إضافة لاعب إلى الدورة</button>
+            
+            <div id="players-list-container">
+                <h3>اللاعبون المسجلون في الدورة الحالية:</h3>
+                <ul id="players-list"></ul>
+            </div>
+            <button id="start-game-btn" class="btn-success" style="display:none;">بدء حرب القارات</button>
+        </div>
+
+        <div id="main-game-screen" class="panel" style="display:none;">
+            <header class="game-header">
+                <div class="turn-indicator">
+                    الدور الحالي: <span id="current-player-display" class="highlight">--</span> 
+                    (<span id="current-country-display">--</span>)
+                </div>
+                <button id="end-turn-btn" class="btn-danger">إنهاء الدور وتحديث الإمدادات</button>
+            </header>
+
+            <section class="resources-bar">
+                <div class="res-item" title="نفط لتحريك الآليات"><span class="icon">🛢️</span> النفط: <span id="res-oil">0</span></div>
+                <div class="res-item" title="حديد للبناء العسكري والمدني"><span class="icon">🧱</span> الحديد: <span id="res-iron">0</span></div>
+                <div class="res-item" title="مادة نادرة للتصنيع المتقدم"><span class="icon">💎</span> المادة النادرة: <span id="res-rare">0</span></div>
+                <div class="res-item" title="مكونات والكترونيات للآليات الثقيلة"><span class="icon">⚙️</span> الصناعية: <span id="res-industrial">0</span></div>
+                <div class="res-item" title="إمدادات ووقود للجيوش"><span class="icon">📦</span> اللوجستية: <span id="res-logistics">0</span></div>
+                <div class="res-item" title="نقد للأبحاث والتطوير"><span class="icon">💵</span> النقد: <span id="res-cash">0</span></div>
+                <div class="res-item" title="الحد الأقصى للتجنيد"><span class="icon">🎖️</span> البشرية: <span id="res-manpower">0</span></div>
+            </section>
+
+            <div class="grid-layout">
+                <div class="sub-panel">
+                    <h3>🏛️ المعسكرات والمباني الاقتصادية</h3>
+                    <div class="actions-list">
+                        <button onclick="buildStructure('mobilization')">بناء قاعدة تجنيد (50 حديد)</button>
+                        <button onclick="buildStructure('military_base')">بناء قاعدة عسكرية متخصصة (80 حديد، 20 نادرة)</button>
+                        <button onclick="buildStructure('industry')">بناء مبنى اقتصادي / مصنع (60 حديد)</button>
+                        <button onclick="buildStructure('bunker')">بناء مخبأ دفاعي وطب ميداني (40 حديد)</button>
+                        <button onclick="buildStructure('highway')">إنشاء شبكة طرق سريعة (+50% سرعة برية) (30 حديد)</button>
+                        <button onclick="buildStructure('airfield')">إنشاء مطار عسكري (النقل الجوي) (70 حديد، 30 نادرة)</button>
+                    </div>
+                    <div class="status-box">
+                        <h4>المنشآت الحالية:</h4>
+                        <ul id="buildings-status"></ul>
+                    </div>
+                </div>
+
+                <div class="sub-panel">
+                    <h3>⚔️ قيادة الأركان (تجنيد وتصنيع الآليات)</h3>
+                    <div class="actions-list">
+                        <h4>فئة الأفراد والمشاة</h4>
+                        <button onclick="trainUnit('motorized')">تجنيد مشاة آلية (متوسطة)</button>
+                        <button onclick="trainUnit('mechanized')">تجنيد مشاة ميكانيكية (بطيئة/مدرعة)</button>
+                        <button onclick="trainUnit('special_forces')">تجنيد قوات خاصة (سريعة/تخفي)</button>
+                        <button onclick="trainUnit('airborne')">تجنيد مظليين (فائقة جوياً)</button>
+                        
+                        <h4>فئة الجيوش والآليات الثقيلة</h4>
+                        <button onclick="trainUnit('recon')">تصنيع مدرعات استطلاع (سريعة جداً)</button>
+                        <button onclick="trainUnit('mbt')">تصنيع دبابات قتالية MBT (بطيئة/مدمرة)</button>
+                        <button onclick="trainUnit('artillery')">تصنيع مدفعية صاروخية (بطيئة جداً/عن بعد)</button>
+                        <button onclick="trainUnit('aa')">تصنيع مضادات طيران عسكرية (حماية ومرافقة)</button>
+
+                        <h4>سلاح الجو والبحر وقوات النخبة</h4>
+                        <button onclick="trainUnit('jets')">تصنيع مقاتلات نفاثة (خارقة السرعة)</button>
+                        <button onclick="trainUnit('helis')">تصنيع مروحيات هجومية (تدمير الدبابات)</button>
+                        <button onclick="trainUnit('navy')">بناء سفن ومدمرات (تأمين السواحل)</button>
+                        <button onclick="trainUnit('officer')">تعيين قائد / قوات نخبة (ميزات تشجيعية Buffs)</button>
+                    </div>
+                </div>
+
+                <div class="sub-panel full-width">
+                    <h3>📊 استعراض الفيلق العسكري والسرعات الحالية</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>نوع الوحدة</th>
+                                    <th>العدد المتاح</th>
+                                    <th>السرعة النسبية في الميدان</th>
+                                    <th>الدور الاستراتيجي التكتيكي</th>
+                                </tr>
+                            </thead>
+                            <tbody id="army-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
