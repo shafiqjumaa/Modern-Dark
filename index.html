@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سيطرة الشرق الأوسط — لعبة استراتيجية</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ شاشة الدخول ============ -->
+<div id="lobbyScreen">
+  <div class="lobby-card">
+    <div class="lobby-eyebrow">لعبة استراتيجية أونلاين</div>
+    <h1 class="lobby-title">سيطرة الشرق الأوسط</h1>
+    <p class="lobby-sub">18 دولة، 5 موارد، وحدات عسكرية وبناء — أنشئ غرفة أو انضم لغرفة صديقك بنفس الكود.</p>
+
+    <div class="field">
+      <label>اسمك في اللعبة</label>
+      <input id="nameInput" type="text" placeholder="مثال: أحمد" maxlength="20">
+    </div>
+
+    <div class="field">
+      <label>لونك</label>
+      <div class="color-row" id="colorRow"></div>
+    </div>
+
+    <div class="field">
+      <label>كود الغرفة (شارك نفس الكود مع من تريد اللعب معه)</label>
+      <input id="roomInput" type="text" placeholder="مثال: MENA1" maxlength="10">
+    </div>
+
+    <button class="btn" id="enterBtn">دخول / إنشاء الغرفة</button>
+
+    <div class="lobby-status" id="statusBox">جاهز للاتصال...</div>
+  </div>
+</div>
+
+<!-- ============ شاشة اللعبة ============ -->
+<div id="gameScreen">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <span class="dot"></span>
+      <span>سيطرة الشرق الأوسط</span>
+      <span class="mode-badge" id="modeBadge">—</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="room-code-badge" id="roomCodeBadge">----</span>
+      <span id="tickLabel" style="font-size:12px; color:var(--muted);">تِك #0</span>
+      <button class="btn secondary small" id="leaveBtn">مغادرة</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <h3>اللاعبون</h3>
+      <div id="playersList"></div>
+      <h3 style="margin-top:16px;">سجل الأحداث</h3>
+      <div class="log-box" id="logBox"></div>
+    </div>
+
+    <div class="map-wrap">
+      <svg id="mapSvg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
+        <g id="countriesLayer"></g>
+        <g id="labelsLayer"></g>
+      </svg>
+      <div class="resource-hud" id="resourceHud"></div>
+      <div class="tick-bar"><div class="fill" id="tickFill"></div></div>
+    </div>
+
+    <div class="sidebar right" id="detailPanel">
+      <div class="empty-hint">اضغط على أي دولة على الخريطة لعرض تفاصيلها والتحكم بها</div>
+    </div>
+  </div>
+</div>
+
+<div id="toastHost"></div>
+
+<script type="module" src="js/game.js"></script>
+</body>
+</html>
